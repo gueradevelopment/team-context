@@ -23,10 +23,10 @@ func (db *BoardDB) Get(id string, c chan Result) {
 	if ok {
 		result.Result = item
 		result.Err = nil
-	}
-	else {
+	} else {
 		result.Err = errors.New("No result")
 	}
+
 	c <- result
 }
 
