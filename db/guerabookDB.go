@@ -3,7 +3,7 @@ package db
 import (
 	"errors"
 
-	"github.com/gueradevelopment/personal-context/models"
+	"github.com/gueradevelopment/team-context/models"
 )
 
 // GuerabookDB - Guerabook model database accessor
