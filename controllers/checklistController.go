@@ -6,18 +6,19 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/gueradevelopment/personal-context/models"
+
 	"github.com/gorilla/mux"
-	"github.com/gueradevelopment/team-context/db"
-	"github.com/gueradevelopment/team-context/models"
+	"github.com/gueradevelopment/personal-context/db"
 )
 
-// BoardController - controller for Board model
-type BoardController struct {
-	data db.BoardDB
+// ChecklistController - controller for Checklist model
+type ChecklistController struct {
+	data db.ChecklistDB
 }
 
 // Get handler
-func (controller *BoardController) Get(w http.ResponseWriter, r *http.Request) {
+func (controller *ChecklistController) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	c := make(chan db.Result)
@@ -35,7 +36,7 @@ func (controller *BoardController) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetAll handler
-func (controller *BoardController) GetAll(w http.ResponseWriter, r *http.Request) {
+func (controller *ChecklistController) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	c := make(chan db.ResultArray)
 	where := r.URL.Query()
@@ -53,7 +54,7 @@ func (controller *BoardController) GetAll(w http.ResponseWriter, r *http.Request
 }
 
 // Delete handler
-func (controller *BoardController) Delete(w http.ResponseWriter, r *http.Request) {
+func (controller *ChecklistController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	c := make(chan db.Result)
@@ -71,12 +72,12 @@ func (controller *BoardController) Delete(w http.ResponseWriter, r *http.Request
 }
 
 // Edit handler
-func (controller *BoardController) Edit(w http.ResponseWriter, r *http.Request) {
+func (controller *ChecklistController) Edit(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Fprintf(w, "Error!")
 	}
-	var item models.Board
+	var item models.Checklist
 	json.Unmarshal(body, &item)
 
 	c := make(chan db.Result)
@@ -94,12 +95,12 @@ func (controller *BoardController) Edit(w http.ResponseWriter, r *http.Request) 
 }
 
 // Add handler
-func (controller *BoardController) Add(w http.ResponseWriter, r *http.Request) {
+func (controller *ChecklistController) Add(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Fprintf(w, "Error!")
 	}
-	var item models.Board
+	var item models.Checklist
 	json.Unmarshal(body, &item)
 
 	c := make(chan db.Result)
@@ -117,7 +118,7 @@ func (controller *BoardController) Add(w http.ResponseWriter, r *http.Request) {
 }
 
 // AddController function
-func (controller *BoardController) AddController(r *mux.Router) {
+func (controller *ChecklistController) AddController(r *mux.Router) {
 	r.HandleFunc("/", controller.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/{id}", controller.Get).Methods(http.MethodGet)
 	r.HandleFunc("/", controller.Edit).Methods(http.MethodPut)
@@ -125,9 +126,9 @@ func (controller *BoardController) AddController(r *mux.Router) {
 	r.HandleFunc("/{id}", controller.Delete).Methods(http.MethodDelete)
 }
 
-// AddBoardController initializer
-func AddBoardController(r *mux.Router) {
-	data := db.BoardDB{}
-	boardController := BoardController{data: data}
-	boardController.AddController(r)
+// AddChecklistController initializer
+func AddChecklistController(r *mux.Router) {
+	data := db.ChecklistDB{}
+	checklistController := ChecklistController{data: data}
+	checklistController.AddController(r)
 }
