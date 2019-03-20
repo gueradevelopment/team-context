@@ -16,8 +16,8 @@ type GuerateamController struct {
 	data db.GuerateamDB
 }
 
-// AddGueraTeamController initializer
-func AddGueraTeamController(r *mux.Router) {
+// AddGuerateamController initializer
+func AddGuerateamController(r *mux.Router) {
 	data := db.GuerateamDB{}
 	guerateamController := GuerateamController{data: data}
 	guerateamController.AddController(r)
