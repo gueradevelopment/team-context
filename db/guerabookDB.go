@@ -31,12 +31,14 @@ func (db *GuerabookDB) Get(id string, c chan Result) {
 }
 
 // GetAll - retrieves all resources
-func (db *GuerabookDB) GetAll(c chan ResultArray, where map[string][]string) {
+func (db *GuerabookDB) GetAll(c chan ResultArray, id string) {
 	defer close(c)
 	result := ResultArray{}
 	var arr = []Model{}
 	for _, v := range guerabookItems {
-		arr = append(arr, v)
+		if v.TeamID == id {
+			arr = append(arr, v)
+		}
 	}
 	result.Result = arr
 	c <- result

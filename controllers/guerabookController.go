@@ -37,10 +37,12 @@ func (controller *GuerabookController) Get(w http.ResponseWriter, r *http.Reques
 
 // GetAll handler
 func (controller *GuerabookController) GetAll(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	//w.Header().Set("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	id := vars["teamId"]
 	c := make(chan db.ResultArray)
-	where := r.URL.Query()
-	go controller.data.GetAll(c, where)
+	//where := r.URL.Query()
+	go controller.data.GetAll(c, id)
 	result := <-c
 	if result.Err == nil {
 		marshalled, err := json.Marshal(result.Result)
@@ -119,7 +121,7 @@ func (controller *GuerabookController) Add(w http.ResponseWriter, r *http.Reques
 
 // AddController function
 func (controller *GuerabookController) AddController(r *mux.Router) {
-	r.HandleFunc("/", controller.GetAll).Methods(http.MethodGet)
+	r.HandleFunc("/team/{teamId}", controller.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/{id}", controller.Get).Methods(http.MethodGet)
 	r.HandleFunc("/", controller.Edit).Methods(http.MethodPut)
 	r.HandleFunc("/", controller.Add).Methods(http.MethodPost)
