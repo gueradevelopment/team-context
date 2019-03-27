@@ -11,31 +11,29 @@ import (
 	"github.com/gueradevelopment/team-context/models"
 )
 
-// BoardController - controller for Board model
-type BoardController struct {
-	data db.BoardDB
+// GuerateamController - controller for GueraTeam model
+type GuerateamController struct {
+	data db.GuerateamDB
 }
 
-// Get handler
-func (controller *BoardController) Get(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-	c := make(chan db.Result)
-	go controller.data.Get(id, c)
-	result := <-c
-	if result.Err == nil {
-		marshalled, err := json.Marshal(result.Result)
-		if err != nil {
-			fmt.Fprintf(w, "Error!")
-		} else {
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(marshalled)
-		}
-	}
+// AddGuerateamController initializer
+func AddGuerateamController(r *mux.Router) {
+	data := db.GuerateamDB{}
+	guerateamController := GuerateamController{data: data}
+	guerateamController.AddController(r)
+}
+
+// AddController function
+func (controller *GuerateamController) AddController(r *mux.Router) {
+	r.HandleFunc("/", controller.GetAll).Methods(http.MethodGet)
+	r.HandleFunc("/{id}", controller.Get).Methods(http.MethodGet)
+	r.HandleFunc("/", controller.Edit).Methods(http.MethodPut)
+	r.HandleFunc("/", controller.Add).Methods(http.MethodPost)
+	r.HandleFunc("/{id}", controller.Delete).Methods(http.MethodDelete)
 }
 
 // GetAll handler
-func (controller *BoardController) GetAll(w http.ResponseWriter, r *http.Request) {
+func (controller *GuerateamController) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	c := make(chan db.ResultArray)
 	where := r.URL.Query()
@@ -52,12 +50,12 @@ func (controller *BoardController) GetAll(w http.ResponseWriter, r *http.Request
 	}
 }
 
-// Delete handler
-func (controller *BoardController) Delete(w http.ResponseWriter, r *http.Request) {
+// Get handler
+func (controller *GuerateamController) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	c := make(chan db.Result)
-	go controller.data.Delete(id, c)
+	go controller.data.Get(id, c)
 	result := <-c
 	if result.Err == nil {
 		marshalled, err := json.Marshal(result.Result)
@@ -71,12 +69,12 @@ func (controller *BoardController) Delete(w http.ResponseWriter, r *http.Request
 }
 
 // Edit handler
-func (controller *BoardController) Edit(w http.ResponseWriter, r *http.Request) {
+func (controller *GuerateamController) Edit(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Fprintf(w, "Error!")
 	}
-	var item models.Board
+	var item models.Guerateam
 	json.Unmarshal(body, &item)
 
 	c := make(chan db.Result)
@@ -94,12 +92,12 @@ func (controller *BoardController) Edit(w http.ResponseWriter, r *http.Request) 
 }
 
 // Add handler
-func (controller *BoardController) Add(w http.ResponseWriter, r *http.Request) {
+func (controller *GuerateamController) Add(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Fprintf(w, "Error!")
 	}
-	var item models.Board
+	var item models.Guerateam
 	json.Unmarshal(body, &item)
 
 	c := make(chan db.Result)
@@ -116,18 +114,20 @@ func (controller *BoardController) Add(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// AddController function
-func (controller *BoardController) AddController(r *mux.Router) {
-	r.HandleFunc("/", controller.GetAll).Methods(http.MethodGet)
-	r.HandleFunc("/{id}", controller.Get).Methods(http.MethodGet)
-	r.HandleFunc("/", controller.Edit).Methods(http.MethodPut)
-	r.HandleFunc("/", controller.Add).Methods(http.MethodPost)
-	r.HandleFunc("/{id}", controller.Delete).Methods(http.MethodDelete)
-}
-
-// AddBoardController initializer
-func AddBoardController(r *mux.Router) {
-	data := db.BoardDB{}
-	boardController := BoardController{data: data}
-	boardController.AddController(r)
+// Delete handler
+func (controller *GuerateamController) Delete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	c := make(chan db.Result)
+	go controller.data.Delete(id, c)
+	result := <-c
+	if result.Err == nil {
+		marshalled, err := json.Marshal(result.Result)
+		if err != nil {
+			fmt.Fprintf(w, "Error!")
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(marshalled)
+		}
+	}
 }
