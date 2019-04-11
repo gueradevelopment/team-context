@@ -1,0 +1,23 @@
+{
+	"ImportPath": "github.com/gueradevelopment/team-context",
+	"GoVersion": "go1.11",
+	"GodepVersion": "v80",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.7.0",
+			"Rev": "a7962380ca08b5a188038c69871b8d3fbdf31e89"
+		},
+		{
+			"ImportPath": "github.com/gueradevelopment/personal-context/db",
+			"Rev": "88831d30b8f339299a457d7b1d63d0c698bec490"
+		},
+		{
+			"ImportPath": "github.com/gueradevelopment/personal-context/models",
+			"Rev": "88831d30b8f339299a457d7b1d63d0c698bec490"
+		}
+	]
+}
